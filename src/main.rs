@@ -31,6 +31,9 @@ struct IconInfo {
 struct IconViewerApp {
     icons: Vec<IconInfo>,
     scroll_area_id: egui::Id,
+    dark_mode: bool,
+    icon_size: f32,
+    icon_size_options: Vec<(String, f32)>,
 }
 
 impl IconViewerApp {
@@ -38,6 +41,14 @@ impl IconViewerApp {
         let mut app = Self {
             icons: Vec::new(),
             scroll_area_id: egui::Id::new("icon_scroll"),
+            dark_mode: false,
+            icon_size: 64.0,
+            icon_size_options: vec![
+                ("Small (32px)".to_string(), 32.0),
+                ("Medium (64px)".to_string(), 64.0),
+                ("Large (96px)".to_string(), 96.0),
+                ("Extra Large (128px)".to_string(), 128.0),
+            ],
         };
 
         app.discover_icons();
@@ -230,6 +241,13 @@ impl IconViewerApp {
 
 impl eframe::App for IconViewerApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        // Set theme based on dark_mode toggle
+        if self.dark_mode {
+            ctx.set_visuals(egui::Visuals::dark());
+        } else {
+            ctx.set_visuals(egui::Visuals::light());
+        }
+
         // Handle keyboard shortcuts
         ctx.input(|i| {
             if i.key_pressed(egui::Key::Escape)
@@ -238,6 +256,30 @@ impl eframe::App for IconViewerApp {
             {
                 ctx.send_viewport_cmd(egui::ViewportCommand::Close);
             }
+        });
+
+        // Toolbar
+        egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
+            ui.horizontal(|ui| {
+                ui.checkbox(&mut self.dark_mode, "Dark Mode");
+                
+                ui.separator();
+                
+                ui.label("Icon Size:");
+                egui::ComboBox::from_id_source("icon_size_combo")
+                    .selected_text(
+                        self.icon_size_options
+                            .iter()
+                            .find(|(_, size)| *size == self.icon_size)
+                            .map(|(name, _)| name.as_str())
+                            .unwrap_or("Medium (64px)")
+                    )
+                    .show_ui(ui, |ui| {
+                        for (name, size) in &self.icon_size_options {
+                            ui.selectable_value(&mut self.icon_size, *size, name);
+                        }
+                    });
+            });
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
@@ -249,7 +291,7 @@ impl eframe::App for IconViewerApp {
                 .show(ui, |ui| {
                     ui.with_layout(egui::Layout::top_down_justified(egui::Align::LEFT), |ui| {
                         let available_width = ui.available_width();
-                        let icon_size = 64.0;
+                        let icon_size = self.icon_size;
                         let spacing = 10.0;
                         let icons_per_row =
                             ((available_width - spacing) / (icon_size + spacing)).floor() as usize;
