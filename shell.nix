@@ -13,8 +13,6 @@ let
       xorg.libXcursor
       xorg.libXi
       xorg.libXrandr
-      # Audio libraries
-      alsa-lib
     ];
 in pkgs.mkShell rec {
   buildInputs = with pkgs; [
@@ -47,10 +45,10 @@ in pkgs.mkShell rec {
     pkgs.xorg.libXcursor
     pkgs.xorg.libXi
     pkgs.xorg.libXrandr
-    pkgs.alsa-lib
   ]) ++ [
     # Add rpath for runtime library loading
-    "-C" "link-arg=-Wl,-rpath,${libPath}"
+    "-C"
+    "link-arg=-Wl,-rpath,${libPath}"
   ];
   LD_LIBRARY_PATH = libPath;
   # Add glibc, clang, glib, and other headers to bindgen search path
