@@ -290,33 +290,25 @@ impl eframe::App for IconViewerApp {
                                     ui.vertical(|ui| {
                                         ui.set_width(icon_size + spacing);
 
-                                        let mut response = None;
-
                                         if let Some(texture) = &icon.texture {
                                             let image = egui::Image::from_texture(texture)
                                                 .fit_to_exact_size(Vec2::splat(icon_size));
-                                            response = Some(ui.add(image));
+                                            ui.add(image);
                                         } else if let Some(error) = &icon.load_error {
-                                            response = Some(ui.colored_label(
+                                            ui.colored_label(
                                                 egui::Color32::RED,
                                                 format!(
                                                     "❌\n{}",
                                                     &icon.name[..icon.name.len().min(10)]
                                                 ),
-                                            ));
-                                            if response.as_ref().unwrap().hovered() {
-                                                response
-                                                    .unwrap()
-                                                    .on_hover_text_at_pointer(icon.path.to_string_lossy());
-                                            }
+                                            )
+                                            .on_hover_text_at_pointer(icon.path.to_string_lossy());
                                         } else {
-                                            response =
-                                                Some(ui.colored_label(egui::Color32::GRAY, "⏳"));
+                                            ui.colored_label(egui::Color32::GRAY, "⏳");
                                         }
 
-                                        let label_response = ui.label(&icon.name);
-
-                                        label_response.on_hover_text_at_pointer(icon.path.to_string_lossy());
+                                        ui.label(&icon.name)
+                                            .on_hover_text_at_pointer(icon.path.to_string_lossy());
                                     });
                                 }
                             });

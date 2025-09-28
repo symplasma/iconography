@@ -11,6 +11,6 @@ fn main() -> Result<(), eframe::Error> {
     eframe::run_native(
         "Program Icon Viewer",
         options,
-        Box::new(|cc| Box::new(IconViewerApp::new(cc))),
+        Box::new(|cc| Ok(Box::new(IconViewerApp::new(cc)))),
     )
 }
