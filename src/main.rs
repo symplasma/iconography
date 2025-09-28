@@ -147,9 +147,9 @@ impl IconViewerApp {
     
     fn load_svg_image(path: &Path) -> Result<ColorImage> {
         let svg_data = std::fs::read_to_string(path)?;
-        let rtree = usvg::Tree::from_str(&svg_data, &usvg::Options::default())?;
+        let usvg_tree = usvg::Tree::from_str(&svg_data, &usvg::Options::default())?;
         
-        let size = rtree.size();
+        let size = usvg_tree.size;
         let width = size.width() as u32;
         let height = size.height() as u32;
         
@@ -164,8 +164,8 @@ impl IconViewerApp {
         let mut pixmap = resvg::tiny_skia::Pixmap::new(width, height)
             .ok_or_else(|| anyhow::anyhow!("Failed to create pixmap"))?;
         
-        resvg::Tree::render(
-            &rtree,
+        let resvg_tree = resvg::Tree::from_usvg(&usvg_tree);
+        resvg_tree.render(
             resvg::tiny_skia::Transform::from_scale(
                 width as f32 / size.width(),
                 height as f32 / size.height(),
