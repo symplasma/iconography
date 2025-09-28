@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
 use anyhow::Result;
+use usvg::TreeParsing;
 
 fn main() -> Result<(), eframe::Error> {
     let options = eframe::NativeOptions {
@@ -145,8 +146,8 @@ impl IconViewerApp {
     }
     
     fn load_svg_image(path: &Path) -> Result<ColorImage> {
-        let svg_data = std::fs::read(path)?;
-        let rtree = usvg::Tree::from_data(&svg_data, &usvg::Options::default())?;
+        let svg_data = std::fs::read_to_string(path)?;
+        let rtree = usvg::Tree::from_str(&svg_data, &usvg::Options::default())?;
         
         let size = rtree.size();
         let width = size.width() as u32;
@@ -163,7 +164,7 @@ impl IconViewerApp {
         let mut pixmap = resvg::tiny_skia::Pixmap::new(width, height)
             .ok_or_else(|| anyhow::anyhow!("Failed to create pixmap"))?;
         
-        resvg::render(
+        resvg::Tree::render(
             &rtree,
             resvg::tiny_skia::Transform::from_scale(
                 width as f32 / size.width(),
@@ -191,16 +192,15 @@ impl IconViewerApp {
     
     fn load_raster_image(path: &Path) -> Result<ColorImage> {
         let img = image::open(path)?;
-        let img = img.to_rgba8();
-        let (width, height) = img.dimensions();
         
         // Limit size to prevent memory issues
-        let img = if width > 256 || height > 256 {
+        let img = if img.width() > 256 || img.height() > 256 {
             img.resize(256, 256, image::imageops::FilterType::Lanczos3)
         } else {
             img
         };
         
+        let img = img.to_rgba8();
         let (width, height) = img.dimensions();
         
         Ok(ColorImage::from_rgba_unmultiplied(
@@ -241,25 +241,27 @@ impl eframe::App for IconViewerApp {
                                     ui.vertical(|ui| {
                                         ui.set_width(icon_size + spacing);
                                         
+                                        let mut response = None;
+                                        
                                         if let Some(texture) = &icon.texture {
                                             let image = egui::Image::from_texture(texture)
                                                 .fit_to_exact_size(Vec2::splat(icon_size));
-                                            ui.add(image);
+                                            response = Some(ui.add(image));
                                         } else if let Some(error) = &icon.load_error {
-                                            ui.colored_label(
+                                            response = Some(ui.colored_label(
                                                 egui::Color32::RED,
                                                 format!("❌\n{}", &icon.name[..icon.name.len().min(10)])
-                                            );
-                                            if ui.response().hovered() {
+                                            ));
+                                            if response.as_ref().unwrap().hovered() {
                                                 egui::show_tooltip_text(ctx, egui::Id::new(&icon.path), error);
                                             }
                                         } else {
-                                            ui.colored_label(egui::Color32::GRAY, "⏳");
+                                            response = Some(ui.colored_label(egui::Color32::GRAY, "⏳"));
                                         }
                                         
-                                        ui.label(&icon.name);
+                                        let label_response = ui.label(&icon.name);
                                         
-                                        if ui.response().hovered() {
+                                        if response.as_ref().map_or(false, |r| r.hovered()) || label_response.hovered() {
                                             egui::show_tooltip_text(
                                                 ctx,
                                                 egui::Id::new(&icon.path),
