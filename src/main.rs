@@ -112,11 +112,14 @@ impl IconViewerApp {
         // NixOS-specific paths
         paths.push(PathBuf::from("/run/current-system/sw/share/icons"));
         paths.push(PathBuf::from("/run/current-system/sw/share/pixmaps"));
-        
+
         // User profile paths for Nix
         if let Ok(home) = std::env::var("HOME") {
             paths.push(PathBuf::from(format!("{}/.nix-profile/share/icons", home)));
-            paths.push(PathBuf::from(format!("{}/.nix-profile/share/pixmaps", home)));
+            paths.push(PathBuf::from(format!(
+                "{}/.nix-profile/share/pixmaps",
+                home
+            )));
         }
 
         // Common Linux icon directories (still useful for some packages)
@@ -262,9 +265,9 @@ impl eframe::App for IconViewerApp {
         egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
             ui.horizontal(|ui| {
                 ui.checkbox(&mut self.dark_mode, "Dark Mode");
-                
+
                 ui.separator();
-                
+
                 ui.label("Icon Size:");
                 egui::ComboBox::from_id_source("icon_size_combo")
                     .selected_text(
@@ -272,7 +275,7 @@ impl eframe::App for IconViewerApp {
                             .iter()
                             .find(|(_, size)| *size == self.icon_size)
                             .map(|(name, _)| name.as_str())
-                            .unwrap_or("Medium (64px)")
+                            .unwrap_or("Medium (64px)"),
                     )
                     .show_ui(ui, |ui| {
                         for (name, size) in &self.icon_size_options {
