@@ -98,7 +98,17 @@ impl IconViewerApp {
     fn get_icon_search_paths() -> Vec<PathBuf> {
         let mut paths = Vec::new();
 
-        // Common Linux icon directories
+        // NixOS-specific paths
+        paths.push(PathBuf::from("/run/current-system/sw/share/icons"));
+        paths.push(PathBuf::from("/run/current-system/sw/share/pixmaps"));
+        
+        // User profile paths for Nix
+        if let Ok(home) = std::env::var("HOME") {
+            paths.push(PathBuf::from(format!("{}/.nix-profile/share/icons", home)));
+            paths.push(PathBuf::from(format!("{}/.nix-profile/share/pixmaps", home)));
+        }
+
+        // Common Linux icon directories (still useful for some packages)
         paths.push(PathBuf::from("/usr/share/icons"));
         paths.push(PathBuf::from("/usr/share/pixmaps"));
         paths.push(PathBuf::from("/usr/local/share/icons"));
