@@ -305,9 +305,7 @@ impl eframe::App for IconViewerApp {
                                                 ),
                                             ));
                                             if response.as_ref().unwrap().hovered() {
-                                                egui::show_tooltip_at_pointer(ctx, egui::Id::new(&icon.path), |ui| {
-                                                    ui.label(error);
-                                                });
+                                                egui::show_tooltip_text(ctx, egui::Id::new(&icon.path), error);
                                             }
                                         } else {
                                             response =
@@ -319,9 +317,7 @@ impl eframe::App for IconViewerApp {
                                         if response.as_ref().map_or(false, |r| r.hovered())
                                             || label_response.hovered()
                                         {
-                                            egui::show_tooltip_at_pointer(ctx, egui::Id::new(&icon.path), |ui| {
-                                                ui.label(icon.path.to_string_lossy());
-                                            });
+                                            egui::show_tooltip_text(ctx, egui::Id::new(&icon.path), &icon.path.to_string_lossy());
                                         }
                                     });
                                 }
