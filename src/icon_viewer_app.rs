@@ -3,7 +3,7 @@ use eframe::egui;
 use egui::{ColorImage, TextureHandle, Vec2};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-use usvg::TreeParsing;
+use usvg::Tree;
 use walkdir::WalkDir;
 
 struct IconInfo {
@@ -163,7 +163,7 @@ impl IconViewerApp {
         let svg_data = std::fs::read_to_string(path)?;
         let usvg_tree = usvg::Tree::from_str(&svg_data, &usvg::Options::default())?;
 
-        let size = usvg_tree.size;
+        let size = usvg_tree.size();
         let width = size.width() as u32;
         let height = size.height() as u32;
 

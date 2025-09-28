@@ -6,8 +6,16 @@ edition = "2021"
 [dependencies]
 eframe = "0.24"
 egui = "0.24"
-image = { version = "0.24", features = ["png", "jpeg", "gif", "bmp", "ico", "tiff", "webp"] }
-resvg = "0.37"
-usvg = "0.37"
+image = { version = "0.25", features = [
+    "png",
+    "jpeg",
+    "gif",
+    "bmp",
+    "ico",
+    "tiff",
+    "webp",
+] }
+resvg = "0.45"
+usvg = "0.45"
 walkdir = "2.5"
 anyhow = "1.0"
