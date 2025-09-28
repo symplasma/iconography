@@ -3,7 +3,6 @@ use eframe::egui;
 use egui::{ColorImage, TextureHandle, Vec2};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-use usvg::Tree;
 use walkdir::WalkDir;
 
 struct IconInfo {
@@ -181,8 +180,8 @@ impl IconViewerApp {
         let mut pixmap = resvg::tiny_skia::Pixmap::new(width, height)
             .ok_or_else(|| anyhow::anyhow!("Failed to create pixmap"))?;
 
-        let resvg_tree = resvg::Tree::from_usvg(&usvg_tree);
-        resvg_tree.render(
+        resvg::render(
+            &usvg_tree,
             resvg::tiny_skia::Transform::from_scale(
                 width as f32 / size.width(),
                 height as f32 / size.height(),
