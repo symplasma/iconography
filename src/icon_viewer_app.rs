@@ -253,7 +253,7 @@ impl eframe::App for IconViewerApp {
                 ui.separator();
 
                 ui.label("Icon Size:");
-                egui::ComboBox::from_id_source("icon_size_combo")
+                egui::ComboBox::from_id_salt("icon_size_combo")
                     .selected_text(
                         self.icon_size_options
                             .iter()
@@ -274,7 +274,7 @@ impl eframe::App for IconViewerApp {
             ui.separator();
 
             egui::ScrollArea::vertical()
-                .id_source(self.scroll_area_id)
+                .id_salt(self.scroll_area_id)
                 .show(ui, |ui| {
                     ui.with_layout(egui::Layout::top_down_justified(egui::Align::LEFT), |ui| {
                         let available_width = ui.available_width();
@@ -305,11 +305,9 @@ impl eframe::App for IconViewerApp {
                                                 ),
                                             ));
                                             if response.as_ref().unwrap().hovered() {
-                                                egui::show_tooltip_text(
-                                                    ctx,
-                                                    egui::Id::new(&icon.path),
-                                                    error,
-                                                );
+                                                egui::show_tooltip_at_pointer(ctx, egui::Id::new(&icon.path), |ui| {
+                                                    ui.label(error);
+                                                });
                                             }
                                         } else {
                                             response =
@@ -321,11 +319,9 @@ impl eframe::App for IconViewerApp {
                                         if response.as_ref().map_or(false, |r| r.hovered())
                                             || label_response.hovered()
                                         {
-                                            egui::show_tooltip_text(
-                                                ctx,
-                                                egui::Id::new(&icon.path),
-                                                icon.path.to_string_lossy(),
-                                            );
+                                            egui::show_tooltip_at_pointer(ctx, egui::Id::new(&icon.path), |ui| {
+                                                ui.label(icon.path.to_string_lossy());
+                                            });
                                         }
                                     });
                                 }
