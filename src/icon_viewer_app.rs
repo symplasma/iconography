@@ -307,7 +307,7 @@ impl eframe::App for IconViewerApp {
                                             if response.as_ref().unwrap().hovered() {
                                                 response
                                                     .unwrap()
-                                                    .on_hover_text_at_pointer(&icon.path.into());
+                                                    .on_hover_text_at_pointer(icon.path.to_string_lossy());
                                             }
                                         } else {
                                             response =
@@ -316,7 +316,7 @@ impl eframe::App for IconViewerApp {
 
                                         let label_response = ui.label(&icon.name);
 
-                                        label_response.on_hover_text_at_pointer(&icon.path.into());
+                                        label_response.on_hover_text_at_pointer(icon.path.to_string_lossy());
                                     });
                                 }
                             });
