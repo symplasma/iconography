@@ -224,28 +224,8 @@ impl IconViewerApp {
             img.as_raw(),
         ))
     }
-}
 
-impl eframe::App for IconViewerApp {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // Set theme based on dark_mode toggle
-        if self.dark_mode {
-            ctx.set_visuals(egui::Visuals::dark());
-        } else {
-            ctx.set_visuals(egui::Visuals::light());
-        }
-
-        // Handle keyboard shortcuts
-        ctx.input(|i| {
-            if i.key_pressed(egui::Key::Escape)
-                || (i.modifiers.ctrl && i.key_pressed(egui::Key::D))
-                || (i.modifiers.ctrl && i.key_pressed(egui::Key::C))
-            {
-                ctx.send_viewport_cmd(egui::ViewportCommand::Close);
-            }
-        });
-
-        // Toolbar
+    fn render_top_bar(&mut self, ctx: &egui::Context) {
         egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
             ui.horizontal(|ui| {
                 ui.checkbox(&mut self.dark_mode, "Dark Mode");
@@ -268,7 +248,9 @@ impl eframe::App for IconViewerApp {
                     });
             });
         });
+    }
 
+    fn render_main_panel(&mut self, ctx: &egui::Context) -> egui::InnerResponse<()> {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Program Icons");
             ui.separator();
@@ -315,6 +297,39 @@ impl eframe::App for IconViewerApp {
                         }
                     });
                 });
-        });
+        })
+    }
+}
+
+fn handle_key_events(ctx: &egui::Context) {
+    // Handle keyboard shortcuts
+    ctx.input(|i| {
+        if i.key_pressed(egui::Key::Escape)
+            || (i.modifiers.ctrl && i.key_pressed(egui::Key::D))
+            || (i.modifiers.ctrl && i.key_pressed(egui::Key::C))
+        {
+            ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+        }
+    });
+}
+
+impl eframe::App for IconViewerApp {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        // Set theme based on dark_mode toggle
+        if self.dark_mode {
+            ctx.set_visuals(egui::Visuals::dark());
+        } else {
+            ctx.set_visuals(egui::Visuals::light());
+        }
+
+        handle_key_events(ctx);
+
+        // set scaling for high-dpi display so the ui doesn't render too small
+        ctx.set_pixels_per_point(2.0);
+
+        // Toolbar
+        self.render_top_bar(ctx);
+
+        self.render_main_panel(ctx);
     }
 }
