@@ -109,11 +109,24 @@ impl IconViewerApp {
     fn get_icon_search_paths() -> Vec<PathBuf> {
         let mut paths = Vec::new();
 
+        // Paths to search for icons:
+        //       /run/current-system/sw/share/icons
+        //       /etc/profiles/per-user/egrieco/share/icons
+        //       /home/egrieco/.nix-profile/share/icons
+
         // NixOS-specific paths
         paths.push(PathBuf::from("/run/current-system/sw/share/icons"));
         paths.push(PathBuf::from("/run/current-system/sw/share/pixmaps"));
 
         // User profile paths for Nix
+        if let Ok(user) = std::env::var("USER") {
+            paths.push(PathBuf::from(format!(
+                "/etc/profiles/per-user/{user}/share/icons"
+            )));
+            paths.push(PathBuf::from(format!(
+                "/etc/profiles/per-user/{user}/share/pixmaps"
+            )));
+        }
         if let Ok(home) = std::env::var("HOME") {
             paths.push(PathBuf::from(format!("{}/.nix-profile/share/icons", home)));
             paths.push(PathBuf::from(format!(
@@ -142,6 +155,10 @@ impl IconViewerApp {
                 home
             )));
         }
+
+        // Additional paths to search
+        // /nix/store/qg05qi8y7y6jk6ys5fnx6xx4qns2ldhy-ghostty-1.1.3/share/icons
+        // /nix/store/rpijzq6c40bdgy0ij7hsz9b2z3a8kbfn-gnome-shell-48.4/share/icons
 
         paths
     }
