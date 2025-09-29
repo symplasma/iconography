@@ -391,30 +391,7 @@ impl IconViewerApp {
                         for chunk in self.icons.chunks(icons_per_row) {
                             ui.horizontal(|ui| {
                                 for icon in chunk {
-                                    ui.vertical(|ui| {
-                                        ui.set_width(icon_size + spacing);
-
-                                        if let Some(texture) = &icon.texture {
-                                            let image = egui::Image::from_texture(texture)
-                                                .fit_to_exact_size(Vec2::splat(icon_size));
-                                            ui.add(image);
-                                        } else if let Some(error) = &icon.load_error {
-                                            ui.colored_label(
-                                                egui::Color32::RED,
-                                                format!(
-                                                    "❌\n{}\n{}",
-                                                    &icon.name[..icon.name.len().min(10)],
-                                                    error
-                                                ),
-                                            )
-                                            .on_hover_text_at_pointer(icon.path.to_string_lossy());
-                                        } else {
-                                            ui.colored_label(egui::Color32::GRAY, "⏳");
-                                        }
-
-                                        ui.label(&icon.name)
-                                            .on_hover_text_at_pointer(icon.path.to_string_lossy());
-                                    });
+                                    render_icon(icon_size, spacing, ui, icon);
                                 }
                             });
                         }
@@ -422,6 +399,29 @@ impl IconViewerApp {
                 });
         })
     }
+}
+
+fn render_icon(icon_size: f32, spacing: f32, ui: &mut egui::Ui, icon: &IconInfo) {
+    ui.vertical(|ui| {
+        ui.set_width(icon_size + spacing);
+
+        if let Some(texture) = &icon.texture {
+            let image =
+                egui::Image::from_texture(texture).fit_to_exact_size(Vec2::splat(icon_size));
+            ui.add(image);
+        } else if let Some(error) = &icon.load_error {
+            ui.colored_label(
+                egui::Color32::RED,
+                format!("❌\n{}\n{}", &icon.name[..icon.name.len().min(10)], error),
+            )
+            .on_hover_text_at_pointer(icon.path.to_string_lossy());
+        } else {
+            ui.colored_label(egui::Color32::GRAY, "⏳");
+        }
+
+        ui.label(&icon.name)
+            .on_hover_text_at_pointer(icon.path.to_string_lossy());
+    });
 }
 
 fn handle_key_events(ctx: &egui::Context) {
