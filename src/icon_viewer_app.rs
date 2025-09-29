@@ -172,6 +172,8 @@ impl IconViewerApp {
             .unwrap_or("")
             .to_lowercase();
 
+        debug!("Loading image: {} (type: {})", path.display(), extension);
+
         match extension.as_str() {
             "svg" => Self::load_svg_image(path),
             "xpm" => Self::load_xpm_image(path),
