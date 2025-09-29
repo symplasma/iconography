@@ -157,9 +157,22 @@ impl eframe::App for IconViewerApp {
         // set scaling for high-dpi display so the ui doesn't render too small
         ctx.set_pixels_per_point(2.0);
 
+        // Check if icons are still loading and request repaint to keep UI responsive
+        let current_icon_count = self.icons.len();
+        
         // Toolbar
         self.render_top_bar(ctx);
 
         self.render_main_panel(ctx);
+        
+        // If we got new icons during this frame, request another repaint
+        // This ensures the UI updates as soon as new icons are available
+        if self.icons.len() > current_icon_count {
+            ctx.request_repaint();
+        } else {
+            // Even if no new icons arrived, request a repaint after a short delay
+            // to check for new icons periodically while loading is in progress
+            ctx.request_repaint_after(std::time::Duration::from_millis(100));
+        }
     }
 }
