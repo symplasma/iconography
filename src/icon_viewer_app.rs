@@ -6,6 +6,9 @@ use std::path::{Path, PathBuf};
 use tracing::{debug, error, info, trace, warn};
 use walkdir::WalkDir;
 
+/// Maximum depth to recurse below "icons" or "pixmaps" paths
+const MAX_ICON_SEARCH_DEPTH: usize = 4;
+
 struct IconInfo {
     path: PathBuf,
     name: String,
@@ -61,7 +64,7 @@ impl IconViewerApp {
             debug!("Searching for icons in: {}", search_path.display());
 
             for entry in WalkDir::new(&search_path)
-                .max_depth(3)
+                .max_depth(MAX_ICON_SEARCH_DEPTH)
                 .into_iter()
                 .filter_map(|e| e.ok())
             {
