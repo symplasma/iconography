@@ -3,8 +3,8 @@ use eframe::egui;
 use egui::{ColorImage, TextureHandle, Vec2};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-use walkdir::WalkDir;
 use tracing::{debug, error, info, trace, warn};
+use walkdir::WalkDir;
 
 struct IconInfo {
     path: PathBuf,
@@ -40,7 +40,10 @@ impl IconViewerApp {
         app.discover_icons();
         app.load_icon_textures(&cc.egui_ctx);
 
-        info!("IconViewerApp initialization complete with {} icons", app.icons.len());
+        info!(
+            "IconViewerApp initialization complete with {} icons",
+            app.icons.len()
+        );
         app
     }
 
@@ -54,7 +57,7 @@ impl IconViewerApp {
                 debug!("Skipping non-existent path: {}", search_path.display());
                 continue;
             }
-            
+
             debug!("Searching for icons in: {}", search_path.display());
 
             for entry in WalkDir::new(&search_path)
@@ -96,8 +99,11 @@ impl IconViewerApp {
 
         // Sort by name for consistent display
         self.icons.sort_by(|a, b| a.name.cmp(&b.name));
-        
-        info!("Icon discovery complete. Found {} unique icons", self.icons.len());
+
+        info!(
+            "Icon discovery complete. Found {} unique icons",
+            self.icons.len()
+        );
     }
 
     fn get_icon_search_paths() -> Vec<PathBuf> {
@@ -144,7 +150,7 @@ impl IconViewerApp {
         info!("Loading icon textures for {} icons", self.icons.len());
         let mut loaded_count = 0;
         let mut error_count = 0;
-        
+
         for icon in &mut self.icons {
             match Self::load_icon_image(&icon.path) {
                 Ok(color_image) => {
@@ -161,8 +167,11 @@ impl IconViewerApp {
                 }
             }
         }
-        
-        info!("Texture loading complete: {} loaded, {} errors", loaded_count, error_count);
+
+        info!(
+            "Texture loading complete: {} loaded, {} errors",
+            loaded_count, error_count
+        );
     }
 
     fn load_icon_image(path: &Path) -> Result<ColorImage> {
@@ -193,9 +202,13 @@ impl IconViewerApp {
         // Limit size to prevent memory issues
         let (width, height) = if width > 256 || height > 256 {
             let scale = 256.0 / width.max(height) as f32;
-            debug!("Scaling SVG from {}x{} to {}x{}", 
-                   size.width() as u32, size.height() as u32, 
-                   (width as f32 * scale) as u32, (height as f32 * scale) as u32);
+            debug!(
+                "Scaling SVG from {}x{} to {}x{}",
+                size.width() as u32,
+                size.height() as u32,
+                (width as f32 * scale) as u32,
+                (height as f32 * scale) as u32
+            );
             (
                 (width as f32 * scale) as u32,
                 (height as f32 * scale) as u32,
@@ -239,7 +252,11 @@ impl IconViewerApp {
 
         // Limit size to prevent memory issues
         let img = if img.width() > 256 || img.height() > 256 {
-            debug!("Resizing raster image from {}x{} to max 256x256", img.width(), img.height());
+            debug!(
+                "Resizing raster image from {}x{} to max 256x256",
+                img.width(),
+                img.height()
+            );
             img.resize(256, 256, image::imageops::FilterType::Lanczos3)
         } else {
             img
@@ -257,21 +274,37 @@ impl IconViewerApp {
     fn load_xpm_image(path: &Path) -> Result<ColorImage> {
         // For XPM files, we'll create a placeholder icon since the image crate doesn't support XPM
         // In a full implementation, you'd want to use a dedicated XPM parser
-        warn!("XPM format not fully supported, creating placeholder for: {}", path.display());
+        warn!(
+            "XPM format not fully supported, creating placeholder for: {}",
+            path.display()
+        );
         let content = std::fs::read_to_string(path)?;
-        
+
         // Try to extract dimensions from XMP header if possible
-        let (width, height) = if let Some(width_line) = content.lines().find(|line| line.contains("width")) {
-            // Simple parsing - this is a basic implementation
-            let width = width_line.chars().filter(|c| c.is_ascii_digit()).collect::<String>().parse::<u32>().unwrap_or(32);
-            let height = content.lines()
-                .find(|line| line.contains("height"))
-                .and_then(|line| line.chars().filter(|c| c.is_ascii_digit()).collect::<String>().parse::<u32>().ok())
-                .unwrap_or(32);
-            (width.min(64), height.min(64)) // Limit size
-        } else {
-            (32, 32) // Default size
-        };
+        let (width, height) =
+            if let Some(width_line) = content.lines().find(|line| line.contains("width")) {
+                // Simple parsing - this is a basic implementation
+                let width = width_line
+                    .chars()
+                    .filter(|c| c.is_ascii_digit())
+                    .collect::<String>()
+                    .parse::<u32>()
+                    .unwrap_or(32);
+                let height = content
+                    .lines()
+                    .find(|line| line.contains("height"))
+                    .and_then(|line| {
+                        line.chars()
+                            .filter(|c| c.is_ascii_digit())
+                            .collect::<String>()
+                            .parse::<u32>()
+                            .ok()
+                    })
+                    .unwrap_or(32);
+                (width.min(64), height.min(64)) // Limit size
+            } else {
+                (32, 32) // Default size
+            };
 
         // Create a simple placeholder pattern for XMP files
         let mut pixels = Vec::with_capacity((width * height * 4) as usize);
