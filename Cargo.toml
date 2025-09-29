@@ -2,6 +2,19 @@
 name = "iconography"
 version = "0.1.0"
 edition = "2024"
+license = "BSD-3-Clause"                                                                 # https://spdx.org/licenses/
+authors = ["Elio Grieco <grieco@egx.com>"]
+description = "A demo program to search for and load Linux icons in an egui/eframe app."
+repository = "https://github.com/symplasma/iconography"
+readme = "README.md"
+keywords = ["linux", "desktop", "icons"]                                                 # free text, 5 keywords max
+categories = ["command-line-utilities"]                                                  # https://crates.io/category_slugs
+exclude = [".vscode/*", ".gitignore", ".aider.*"]
+# https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "iconography"
+path = "src/main.rs"
 
 [dependencies]
 eframe = "0.32"
