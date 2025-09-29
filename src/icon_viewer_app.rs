@@ -349,6 +349,7 @@ impl IconViewerApp {
     fn render_top_bar(&mut self, ctx: &egui::Context) {
         egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
             ui.horizontal(|ui| {
+                ui.label(format!("{} icons loaded", self.icons.len()));
                 ui.checkbox(&mut self.dark_mode, "Dark Mode");
 
                 ui.separator();
