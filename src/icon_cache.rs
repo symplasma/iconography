@@ -35,12 +35,14 @@ pub(crate) enum Icon {
 pub(crate) struct IconCache {
     icon_receiver: Receiver<Icon>,
     pub(crate) icons: Vec<Icon>,
+    pub(crate) total_icons_discovered: usize,
 }
 
 impl IconCache {
     pub fn new(ctx: &egui::Context) -> Self {
         // find icons from the disk, this should be quick, probably don't need to spawn this
         let icon_infos = discover_icons();
+        let total_icons_discovered = icon_infos.len();
 
         // loading images seems to take a lot more time
         let (tx, rx) = channel();
@@ -52,6 +54,7 @@ impl IconCache {
         IconCache {
             icon_receiver: rx,
             icons: Default::default(),
+            total_icons_discovered,
         }
     }
 

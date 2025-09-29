@@ -41,7 +41,11 @@ impl IconViewerApp {
     fn render_top_bar(&mut self, ctx: &egui::Context) {
         egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
             ui.horizontal(|ui| {
-                ui.label(format!("{} icons loaded", self.icons.len()));
+                ui.label(format!(
+                    "{}/{} icons loaded",
+                    self.icons.len(),
+                    self.icons.total_icons_discovered
+                ));
                 ui.checkbox(&mut self.dark_mode, "Dark Mode");
 
                 ui.separator();
@@ -159,17 +163,17 @@ impl eframe::App for IconViewerApp {
 
         // Check if icons are still loading and request repaint to keep UI responsive
         let current_icon_count = self.icons.len();
-        
+
         // Toolbar
         self.render_top_bar(ctx);
 
         self.render_main_panel(ctx);
-        
+
         // If we got new icons during this frame, request another repaint
         // This ensures the UI updates as soon as new icons are available
         if self.icons.len() > current_icon_count {
             ctx.request_repaint();
-        } else {
+        } else if self.icons.len() < self.icons.total_icons_discovered {
             // Even if no new icons arrived, request a repaint after a short delay
             // to check for new icons periodically while loading is in progress
             ctx.request_repaint_after(std::time::Duration::from_millis(100));
