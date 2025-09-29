@@ -427,9 +427,8 @@ fn render_icon(icon_size: f32, spacing: f32, ui: &mut egui::Ui, icon: &IconInfo)
                 .unwrap_or("UNKNOWN".into())
         ));
 
-        // Add hover text containing the icon path to the label below. The current approach via `on_hover_text_at_pointer` does not work. AI!
         ui.label(&icon.name)
-            .on_hover_text_at_pointer(icon.path.to_string_lossy());
+            .on_hover_text(icon.path.to_string_lossy());
     });
 }
 
