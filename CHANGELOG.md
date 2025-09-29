@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.1.0 (2025-09-29)
 
+<csr-id-19c2f0688e8d9a9823f0e459d62eb5d4b28846db/>
+<csr-id-1b7fafca1156f29ac2e7fdeb8e515453191885b8/>
+<csr-id-c7c12b9b8faf9801e69236a7ef9e73dd88bdbb69/>
+<csr-id-821e0db8ee8b781e818b05e9fbb9de3889218a3e/>
+
 ### Chore
 
  - <csr-id-19c2f0688e8d9a9823f0e459d62eb5d4b28846db/> initialize Rust project with Cargo
@@ -42,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 54 commits contributed to the release over the course of 1 calendar day.
+ - 55 commits contributed to the release over the course of 1 calendar day.
  - 19 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -53,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Add auto-generated changelog ([`7314209`](https://github.com/symplasma/iconography/commit/7314209b3f3577eb86819bd0d104990345ca9eac))
     - Update cargo metadata ([`cbbce69`](https://github.com/symplasma/iconography/commit/cbbce6944fe6c2a384de71a57401fcd0ba4f9e4c))
     - Update README.md ([`f1e254f`](https://github.com/symplasma/iconography/commit/f1e254f68da9402bc898a1769a087dd2ede18476))
     - Add license, BSD-3-Clause ([`bd262c1`](https://github.com/symplasma/iconography/commit/bd262c1f97e18049ebc30ed90ca4dcf9fba2caaf))
