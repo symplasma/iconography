@@ -31,7 +31,17 @@ pub(crate) struct IconCache {
     pub(crate) icons: Vec<Icon>,
 }
 
-impl IconCache {}
+impl IconCache {
+    pub fn new(ctx: &egui::Context) -> Self {
+        let icon_infos = discover_icons();
+        let icons = load_icon_textures(icon_infos, ctx);
+        IconCache { icons }
+    }
+
+    pub fn len(&self) -> usize {
+        self.icons.len()
+    }
+}
 
 fn get_icon_search_paths() -> Vec<PathBuf> {
     let mut paths = Vec::new();

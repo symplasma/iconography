@@ -1,10 +1,10 @@
-use crate::icon_cache::{Icon, discover_icons, load_icon_textures};
+use crate::icon_cache::{Icon, IconCache};
 use eframe::egui;
 use egui::Vec2;
 use tracing::info;
 
 pub struct IconViewerApp {
-    icons: Vec<Icon>,
+    icons: IconCache,
     scroll_area_id: egui::Id,
     dark_mode: bool,
     icon_size: f32,
@@ -15,11 +15,8 @@ impl IconViewerApp {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         info!("Initializing IconViewerApp");
 
-        let icon_infos = discover_icons();
-        let icons = load_icon_textures(icon_infos, &cc.egui_ctx);
-
         let app = Self {
-            icons,
+            icons: IconCache::new(&cc.egui_ctx),
             scroll_area_id: egui::Id::new("icon_scroll"),
             dark_mode: false,
             icon_size: 64.0,
