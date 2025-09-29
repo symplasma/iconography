@@ -4,6 +4,7 @@ use egui::{ColorImage, TextureHandle, Vec2};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
+use tracing::{debug, error, info, trace, warn};
 
 struct IconInfo {
     path: PathBuf,
@@ -22,6 +23,7 @@ pub struct IconViewerApp {
 
 impl IconViewerApp {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
+        info!("Initializing IconViewerApp");
         let mut app = Self {
             icons: Vec::new(),
             scroll_area_id: egui::Id::new("icon_scroll"),
@@ -38,17 +40,22 @@ impl IconViewerApp {
         app.discover_icons();
         app.load_icon_textures(&cc.egui_ctx);
 
+        info!("IconViewerApp initialization complete with {} icons", app.icons.len());
         app
     }
 
     fn discover_icons(&mut self) {
+        info!("Starting icon discovery");
         let icon_paths = Self::get_icon_search_paths();
         let mut found_icons = HashMap::new();
 
         for search_path in icon_paths {
             if !search_path.exists() {
+                debug!("Skipping non-existent path: {}", search_path.display());
                 continue;
             }
+            
+            debug!("Searching for icons in: {}", search_path.display());
 
             for entry in WalkDir::new(&search_path)
                 .max_depth(3)
@@ -68,6 +75,7 @@ impl IconViewerApp {
                             if !found_icons.contains_key(&name_str)
                                 || matches!(ext.as_str(), "png" | "svg")
                             {
+                                trace!("Found icon: {} at {}", name_str, path.display());
                                 found_icons.insert(name_str.clone(), path.to_path_buf());
                             }
                         }
@@ -88,6 +96,8 @@ impl IconViewerApp {
 
         // Sort by name for consistent display
         self.icons.sort_by(|a, b| a.name.cmp(&b.name));
+        
+        info!("Icon discovery complete. Found {} unique icons", self.icons.len());
     }
 
     fn get_icon_search_paths() -> Vec<PathBuf> {
@@ -131,18 +141,28 @@ impl IconViewerApp {
     }
 
     fn load_icon_textures(&mut self, ctx: &egui::Context) {
+        info!("Loading icon textures for {} icons", self.icons.len());
+        let mut loaded_count = 0;
+        let mut error_count = 0;
+        
         for icon in &mut self.icons {
             match Self::load_icon_image(&icon.path) {
                 Ok(color_image) => {
                     let texture =
                         ctx.load_texture(&icon.name, color_image, egui::TextureOptions::default());
                     icon.texture = Some(texture);
+                    loaded_count += 1;
+                    trace!("Successfully loaded texture for: {}", icon.name);
                 }
                 Err(e) => {
+                    error!("Failed to load icon {}: {}", icon.name, e);
                     icon.load_error = Some(format!("Failed to load: {}", e));
+                    error_count += 1;
                 }
             }
         }
+        
+        info!("Texture loading complete: {} loaded, {} errors", loaded_count, error_count);
     }
 
     fn load_icon_image(path: &Path) -> Result<ColorImage> {
@@ -160,6 +180,7 @@ impl IconViewerApp {
     }
 
     fn load_svg_image(path: &Path) -> Result<ColorImage> {
+        trace!("Loading SVG image: {}", path.display());
         let svg_data = std::fs::read_to_string(path)?;
         let usvg_tree = usvg::Tree::from_str(&svg_data, &usvg::Options::default())?;
 
@@ -170,6 +191,9 @@ impl IconViewerApp {
         // Limit size to prevent memory issues
         let (width, height) = if width > 256 || height > 256 {
             let scale = 256.0 / width.max(height) as f32;
+            debug!("Scaling SVG from {}x{} to {}x{}", 
+                   size.width() as u32, size.height() as u32, 
+                   (width as f32 * scale) as u32, (height as f32 * scale) as u32);
             (
                 (width as f32 * scale) as u32,
                 (height as f32 * scale) as u32,
@@ -208,10 +232,12 @@ impl IconViewerApp {
     }
 
     fn load_raster_image(path: &Path) -> Result<ColorImage> {
+        trace!("Loading raster image: {}", path.display());
         let img = image::open(path)?;
 
         // Limit size to prevent memory issues
         let img = if img.width() > 256 || img.height() > 256 {
+            debug!("Resizing raster image from {}x{} to max 256x256", img.width(), img.height());
             img.resize(256, 256, image::imageops::FilterType::Lanczos3)
         } else {
             img
@@ -227,8 +253,9 @@ impl IconViewerApp {
     }
 
     fn load_xpm_image(path: &Path) -> Result<ColorImage> {
-        // For XMP files, we'll create a placeholder icon since the image crate doesn't support XMP
-        // In a full implementation, you'd want to use a dedicated XMP parser
+        // For XPM files, we'll create a placeholder icon since the image crate doesn't support XPM
+        // In a full implementation, you'd want to use a dedicated XPM parser
+        warn!("XPM format not fully supported, creating placeholder for: {}", path.display());
         let content = std::fs::read_to_string(path)?;
         
         // Try to extract dimensions from XMP header if possible
@@ -348,6 +375,7 @@ fn handle_key_events(ctx: &egui::Context) {
             || (i.modifiers.ctrl && i.key_pressed(egui::Key::D))
             || (i.modifiers.ctrl && i.key_pressed(egui::Key::C))
         {
+            info!("User requested application close via keyboard shortcut");
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
         }
     });
