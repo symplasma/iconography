@@ -41,6 +41,10 @@ impl IconCache {
     pub fn len(&self) -> usize {
         self.icons.len()
     }
+
+    pub fn chunks(&self, chunk_size: usize) -> std::slice::Chunks<'_, Icon> {
+        self.icons.chunks(chunk_size)
+    }
 }
 
 fn get_icon_search_paths() -> Vec<PathBuf> {
