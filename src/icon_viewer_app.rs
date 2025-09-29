@@ -440,6 +440,8 @@ fn handle_key_events(ctx: &egui::Context) {
             || (i.modifiers.ctrl && i.key_pressed(egui::Key::C))
         {
             info!("User requested application close via keyboard shortcut");
+
+            // TODO find out why this is causing the program to freeze/hang
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
         }
     });
