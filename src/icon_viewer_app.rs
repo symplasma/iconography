@@ -280,8 +280,9 @@ impl IconViewerApp {
                                             ui.colored_label(
                                                 egui::Color32::RED,
                                                 format!(
-                                                    "❌\n{}",
-                                                    &icon.name[..icon.name.len().min(10)]
+                                                    "❌\n{}\n{}",
+                                                    &icon.name[..icon.name.len().min(10)],
+                                                    error
                                                 ),
                                             )
                                             .on_hover_text_at_pointer(icon.path.to_string_lossy());
