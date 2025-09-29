@@ -154,6 +154,7 @@ impl IconViewerApp {
 
         match extension.as_str() {
             "svg" => Self::load_svg_image(path),
+            "xpm" => Self::load_xpm_image(path),
             _ => Self::load_raster_image(path),
         }
     }
@@ -222,6 +223,44 @@ impl IconViewerApp {
         Ok(ColorImage::from_rgba_unmultiplied(
             [width as usize, height as usize],
             img.as_raw(),
+        ))
+    }
+
+    fn load_xpm_image(path: &Path) -> Result<ColorImage> {
+        // For XMP files, we'll create a placeholder icon since the image crate doesn't support XMP
+        // In a full implementation, you'd want to use a dedicated XMP parser
+        let content = std::fs::read_to_string(path)?;
+        
+        // Try to extract dimensions from XMP header if possible
+        let (width, height) = if let Some(width_line) = content.lines().find(|line| line.contains("width")) {
+            // Simple parsing - this is a basic implementation
+            let width = width_line.chars().filter(|c| c.is_ascii_digit()).collect::<String>().parse::<u32>().unwrap_or(32);
+            let height = content.lines()
+                .find(|line| line.contains("height"))
+                .and_then(|line| line.chars().filter(|c| c.is_ascii_digit()).collect::<String>().parse::<u32>().ok())
+                .unwrap_or(32);
+            (width.min(64), height.min(64)) // Limit size
+        } else {
+            (32, 32) // Default size
+        };
+
+        // Create a simple placeholder pattern for XMP files
+        let mut pixels = Vec::with_capacity((width * height * 4) as usize);
+        for y in 0..height {
+            for x in 0..width {
+                // Create a simple checkerboard pattern to indicate it's an XMP file
+                let is_dark = (x / 4 + y / 4) % 2 == 0;
+                if is_dark {
+                    pixels.extend_from_slice(&[100, 100, 100, 255]); // Dark gray
+                } else {
+                    pixels.extend_from_slice(&[200, 200, 200, 255]); // Light gray
+                }
+            }
+        }
+
+        Ok(ColorImage::from_rgba_unmultiplied(
+            [width as usize, height as usize],
+            &pixels,
         ))
     }
 
