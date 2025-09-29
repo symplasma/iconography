@@ -57,7 +57,7 @@ impl IconViewerApp {
 
         for search_path in icon_paths {
             if !search_path.exists() {
-                debug!("Skipping non-existent path: {}", search_path.display());
+                warn!("Skipping non-existent path: {}", search_path.display());
                 continue;
             }
 
@@ -213,6 +213,7 @@ impl IconViewerApp {
     fn load_svg_image(path: &Path) -> Result<ColorImage> {
         trace!("Loading SVG image: {}", path.display());
         let svg_data = std::fs::read_to_string(path)?;
+        debug!("Parsing SVG tree...");
         let usvg_tree = usvg::Tree::from_str(&svg_data, &usvg::Options::default())?;
 
         let size = usvg_tree.size();
