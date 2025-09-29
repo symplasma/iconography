@@ -3,6 +3,10 @@ use egui::ColorImage;
 use egui::TextureHandle;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
+use std::sync::mpsc::Receiver;
+use std::sync::mpsc::Sender;
+use std::sync::mpsc::channel;
+use std::thread::spawn;
 use tracing::{debug, error, info, trace, warn};
 use walkdir::WalkDir;
 
@@ -14,6 +18,7 @@ pub(crate) struct IconInfo {
     pub(crate) name: String,
 }
 
+#[derive(Clone)]
 pub(crate) enum Icon {
     Texture {
         path: PathBuf,
@@ -28,21 +33,42 @@ pub(crate) enum Icon {
 }
 
 pub(crate) struct IconCache {
+    icon_receiver: Receiver<Icon>,
     pub(crate) icons: Vec<Icon>,
 }
 
 impl IconCache {
     pub fn new(ctx: &egui::Context) -> Self {
+        // find icons from the disk, this should be quick, probably don't need to spawn this
         let icon_infos = discover_icons();
-        let icons = load_icon_textures(icon_infos, ctx);
-        IconCache { icons }
+
+        // loading images seems to take a lot more time
+        let (tx, rx) = channel();
+        let moved_ctx = ctx.clone();
+        spawn(move || {
+            load_icon_textures(icon_infos, &moved_ctx, tx);
+        });
+
+        IconCache {
+            icon_receiver: rx,
+            icons: Default::default(),
+        }
     }
 
-    pub fn len(&self) -> usize {
+    fn update_icon_vec(&mut self) {
+        // need to be sure to use `try_iter` so this does not block
+        for icon in self.icon_receiver.try_iter() {
+            self.icons.push(icon);
+        }
+    }
+
+    pub fn len(&mut self) -> usize {
+        self.update_icon_vec();
         self.icons.len()
     }
 
-    pub fn chunks(&self, chunk_size: usize) -> std::slice::Chunks<'_, Icon> {
+    pub fn chunks(&mut self, chunk_size: usize) -> std::slice::Chunks<'_, Icon> {
+        self.update_icon_vec();
         self.icons.chunks(chunk_size)
     }
 }
@@ -160,12 +186,14 @@ pub(crate) fn discover_icons() -> Vec<IconInfo> {
     icons
 }
 
-pub(crate) fn load_icon_textures(icon_infos: Vec<IconInfo>, ctx: &egui::Context) -> Vec<Icon> {
+pub(crate) fn load_icon_textures(
+    icon_infos: Vec<IconInfo>,
+    ctx: &egui::Context,
+    sender: Sender<Icon>,
+) {
     info!("Loading icon textures for {} icons", icon_infos.len());
     let mut loaded_count = 0;
     let mut error_count = 0;
-
-    let mut icons: Vec<Icon> = Default::default();
 
     for icon in icon_infos {
         match load_icon_image(&icon.path) {
@@ -175,21 +203,25 @@ pub(crate) fn load_icon_textures(icon_infos: Vec<IconInfo>, ctx: &egui::Context)
 
                 let texture =
                     ctx.load_texture(&icon.name, color_image, egui::TextureOptions::default());
-                icons.push(Icon::Texture {
-                    path: icon.path,
-                    name: icon.name,
-                    texture: texture,
-                });
+                sender
+                    .send(Icon::Texture {
+                        path: icon.path,
+                        name: icon.name,
+                        texture: texture,
+                    })
+                    .expect("should be able to send icon texture");
             }
             Err(e) => {
                 error!("Failed to load icon {}: {}", icon.name, e);
                 error_count += 1;
 
-                icons.push(Icon::Error {
-                    path: icon.path,
-                    name: icon.name,
-                    error: format!("Failed to load: {}", e),
-                });
+                sender
+                    .send(Icon::Error {
+                        path: icon.path,
+                        name: icon.name,
+                        error: format!("Failed to load: {}", e),
+                    })
+                    .expect("should be able to send icon error");
             }
         }
     }
@@ -199,7 +231,7 @@ pub(crate) fn load_icon_textures(icon_infos: Vec<IconInfo>, ctx: &egui::Context)
         loaded_count, error_count
     );
 
-    icons
+    drop(sender);
 }
 
 fn load_icon_image(path: &Path) -> Result<ColorImage> {

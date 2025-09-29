@@ -15,8 +15,10 @@ impl IconViewerApp {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         info!("Initializing IconViewerApp");
 
-        let app = Self {
-            icons: IconCache::new(&cc.egui_ctx),
+        let icons = IconCache::new(&cc.egui_ctx);
+
+        let mut app = Self {
+            icons,
             scroll_area_id: egui::Id::new("icon_scroll"),
             dark_mode: false,
             icon_size: 64.0,
