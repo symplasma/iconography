@@ -1,4 +1,4 @@
-use icon_viewer::icon_viewer_app::IconViewerApp;
+use iconography::iconography::Iconography;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 fn setup_tracing() -> Result<(), Box<dyn std::error::Error>> {
@@ -51,7 +51,7 @@ fn main() -> Result<(), eframe::Error> {
     let result = eframe::run_native(
         "Program Icon Viewer",
         options,
-        Box::new(|cc| Ok(Box::new(IconViewerApp::new(cc)))),
+        Box::new(|cc| Ok(Box::new(Iconography::new(cc)))),
     );
 
     tracing::info!("Icon Viewer application shutting down");

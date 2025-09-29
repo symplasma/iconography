@@ -3,7 +3,7 @@ use eframe::egui;
 use egui::Vec2;
 use tracing::info;
 
-pub struct IconViewerApp {
+pub struct Iconography {
     icons: IconCache,
     scroll_area_id: egui::Id,
     dark_mode: bool,
@@ -11,9 +11,9 @@ pub struct IconViewerApp {
     icon_size_options: Vec<(String, f32)>,
 }
 
-impl IconViewerApp {
+impl Iconography {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
-        info!("Initializing IconViewerApp");
+        info!("Initializing Iconography");
 
         let icons = IconCache::new(&cc.egui_ctx);
 
@@ -31,7 +31,7 @@ impl IconViewerApp {
         };
 
         info!(
-            "IconViewerApp initialization complete with {} icons",
+            "Iconography initialization complete with {} icons",
             app.icons.len()
         );
 
@@ -152,7 +152,7 @@ fn handle_key_events(ctx: &egui::Context) -> bool {
     should_quit
 }
 
-impl eframe::App for IconViewerApp {
+impl eframe::App for Iconography {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         // Set theme based on dark_mode toggle
         if self.dark_mode {

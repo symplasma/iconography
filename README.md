@@ -1,4 +1,4 @@
-# Linux Icon Viewer
+# iconography
 
 A simple test program to view Linux system icons in Rust.
 
