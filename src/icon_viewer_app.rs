@@ -419,6 +419,14 @@ fn render_icon(icon_size: f32, spacing: f32, ui: &mut egui::Ui, icon: &IconInfo)
             ui.colored_label(egui::Color32::GRAY, "⏳");
         }
 
+        ui.label(format!(
+            "{}",
+            icon.path
+                .extension()
+                .map(|e| e.to_string_lossy())
+                .unwrap_or("UNKNOWN".into())
+        ));
+
         ui.label(&icon.name)
             .on_hover_text_at_pointer(icon.path.to_string_lossy());
     });
