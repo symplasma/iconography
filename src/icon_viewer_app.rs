@@ -402,21 +402,23 @@ impl IconViewerApp {
 }
 
 fn render_icon(icon_size: f32, spacing: f32, ui: &mut egui::Ui, icon: &IconInfo) {
+    // TODO is it possible to set hover text on a vertical?
     ui.vertical(|ui| {
         ui.set_width(icon_size + spacing);
 
         if let Some(texture) = &icon.texture {
             let image =
                 egui::Image::from_texture(texture).fit_to_exact_size(Vec2::splat(icon_size));
-            ui.add(image);
+            ui.add(image).on_hover_text(icon.path.to_string_lossy());
         } else if let Some(error) = &icon.load_error {
             ui.colored_label(
                 egui::Color32::RED,
                 format!("❌\n{}\n{}", &icon.name[..icon.name.len().min(10)], error),
             )
-            .on_hover_text_at_pointer(icon.path.to_string_lossy());
+            .on_hover_text(icon.path.to_string_lossy());
         } else {
-            ui.colored_label(egui::Color32::GRAY, "⏳");
+            ui.colored_label(egui::Color32::GRAY, "⏳")
+                .on_hover_text(icon.path.to_string_lossy());
         }
 
         ui.label(format!(
