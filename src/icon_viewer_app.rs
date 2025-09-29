@@ -132,19 +132,24 @@ fn render_icon(icon_size: f32, spacing: f32, ui: &mut egui::Ui, icon: &Icon) {
     });
 }
 
-fn handle_key_events(ctx: &egui::Context) {
+fn handle_key_events(ctx: &egui::Context) -> bool {
+    let mut should_quit = false;
+
     // Handle keyboard shortcuts
     ctx.input(|i| {
         if i.key_pressed(egui::Key::Escape)
-            || (i.modifiers.ctrl && i.key_pressed(egui::Key::D))
             || (i.modifiers.ctrl && i.key_pressed(egui::Key::C))
+            || (i.modifiers.ctrl && i.key_pressed(egui::Key::D))
+            || (i.modifiers.ctrl && i.key_pressed(egui::Key::Q))
         {
             info!("User requested application close via keyboard shortcut");
 
-            // TODO find out why this is causing the program to freeze/hang
-            ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+            // we're returning a bool here since calling `ctx.send_viewport_cmd(egui::ViewportCommand::Close)` causes a hang
+            should_quit = true;
         }
     });
+
+    should_quit
 }
 
 impl eframe::App for IconViewerApp {
@@ -156,7 +161,7 @@ impl eframe::App for IconViewerApp {
             ctx.set_visuals(egui::Visuals::light());
         }
 
-        handle_key_events(ctx);
+        let should_quit = handle_key_events(ctx);
 
         // set scaling for high-dpi display so the ui doesn't render too small
         ctx.set_pixels_per_point(2.0);
@@ -168,6 +173,10 @@ impl eframe::App for IconViewerApp {
         self.render_top_bar(ctx);
 
         self.render_main_panel(ctx);
+
+        if should_quit {
+            ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+        }
 
         // If we got new icons during this frame, request another repaint
         // This ensures the UI updates as soon as new icons are available
