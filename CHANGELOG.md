@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.1.2 (2025-11-10)
+
+### New Features
+
+ - <csr-id-1e6d63f96c7de4d851c301b20938bb3b6dbc86f9/> Make load_icon_textures and IconInfo public
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Make load_icon_textures and IconInfo public ([`1e6d63f`](https://github.com/symplasma/iconography/commit/1e6d63f96c7de4d851c301b20938bb3b6dbc86f9))
+</details>
+
 ## v0.1.1 (2025-11-10)
 
 ### New Features
@@ -15,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
+ - 4 commits contributed to the release.
  - 41 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release iconography v0.1.1 ([`a87fbc6`](https://github.com/symplasma/iconography/commit/a87fbc6b9b4d558bc025b45ea25c0857672896b1))
     - Add rust crates design doc ([`8a6e25c`](https://github.com/symplasma/iconography/commit/8a6e25c67e288e0a8e34283d804e496e7fb1952b))
     - Exclude design docs from crate ([`7dd13e5`](https://github.com/symplasma/iconography/commit/7dd13e51b93cc39514fd8c50a5845c3a413c8beb))
     - Add method to return all icons ([`765bb73`](https://github.com/symplasma/iconography/commit/765bb73ba3c09f563c0da4d1958f9c76a7ac1d7e))
