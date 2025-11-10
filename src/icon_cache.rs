@@ -19,7 +19,7 @@ pub(crate) struct IconInfo {
 }
 
 #[derive(Clone)]
-pub(crate) enum Icon {
+pub enum Icon {
     Texture {
         path: PathBuf,
         name: String,
@@ -32,7 +32,7 @@ pub(crate) enum Icon {
     },
 }
 
-pub(crate) struct IconCache {
+pub struct IconCache {
     icon_receiver: Receiver<Icon>,
     pub(crate) icons: Vec<Icon>,
     pub(crate) total_icons_discovered: usize,
@@ -64,11 +64,24 @@ impl IconCache {
             self.icons.push(icon);
         }
     }
+    fn update_icon_vec_blocking(&mut self) {
+        // need to be sure to use `try_iter` so this does not block
+        for icon in self.icon_receiver.iter() {
+            self.icons.push(icon);
+        }
+    }
 
     pub fn len(&mut self) -> usize {
         self.update_icon_vec();
         self.icons.len()
     }
+
+    pub fn icons(&mut self) -> &Vec<Icon> {
+        self.update_icon_vec_blocking();
+        &self.icons
+    }
+
+    // TODO might want to add a method to return a hashmap as well
 
     pub fn chunks(&mut self, chunk_size: usize) -> std::slice::Chunks<'_, Icon> {
         self.update_icon_vec();
