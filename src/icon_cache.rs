@@ -58,13 +58,13 @@ impl IconCache {
         }
     }
 
-    fn update_icon_vec(&mut self) {
+    pub fn update_icon_vec(&mut self) {
         // need to be sure to use `try_iter` so this does not block
         for icon in self.icon_receiver.try_iter() {
             self.icons.push(icon);
         }
     }
-    fn update_icon_vec_blocking(&mut self) {
+    pub fn update_icon_vec_blocking(&mut self) {
         // need to be sure to use `try_iter` so this does not block
         for icon in self.icon_receiver.iter() {
             self.icons.push(icon);
@@ -89,7 +89,7 @@ impl IconCache {
     }
 }
 
-fn get_icon_search_paths() -> Vec<PathBuf> {
+pub fn get_icon_search_paths() -> Vec<PathBuf> {
     let mut paths = Vec::new();
 
     // Paths to search for icons:
@@ -146,7 +146,7 @@ fn get_icon_search_paths() -> Vec<PathBuf> {
     paths
 }
 
-pub(crate) fn discover_icons() -> Vec<IconInfo> {
+pub fn discover_icons() -> Vec<IconInfo> {
     info!("Starting icon discovery");
     let icon_paths = get_icon_search_paths();
     let mut found_icons = HashMap::new();
@@ -246,7 +246,7 @@ pub fn load_icon_textures(icon_infos: Vec<IconInfo>, ctx: &egui::Context, sender
     drop(sender);
 }
 
-fn load_icon_image(path: &Path) -> Result<ColorImage> {
+pub fn load_icon_image(path: &Path) -> Result<ColorImage> {
     let extension = path
         .extension()
         .and_then(|ext| ext.to_str())
