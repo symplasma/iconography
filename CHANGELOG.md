@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.1.1 (2025-11-10)
+
+### New Features
+
+ - <csr-id-765bb73ba3c09f563c0da4d1958f9c76a7ac1d7e/> Add method to return all icons
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 3 commits contributed to the release.
+ - 41 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Add rust crates design doc ([`8a6e25c`](https://github.com/symplasma/iconography/commit/8a6e25c67e288e0a8e34283d804e496e7fb1952b))
+    - Exclude design docs from crate ([`7dd13e5`](https://github.com/symplasma/iconography/commit/7dd13e51b93cc39514fd8c50a5845c3a413c8beb))
+    - Add method to return all icons ([`765bb73`](https://github.com/symplasma/iconography/commit/765bb73ba3c09f563c0da4d1958f9c76a7ac1d7e))
+</details>
+
 ## v0.1.0 (2025-09-29)
 
 <csr-id-19c2f0688e8d9a9823f0e459d62eb5d4b28846db/>
@@ -47,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 55 commits contributed to the release over the course of 1 calendar day.
+ - 56 commits contributed to the release over the course of 1 calendar day.
  - 19 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -58,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release iconography v0.1.0 ([`d84eb83`](https://github.com/symplasma/iconography/commit/d84eb837ed99fb2c90d20288e7ba429c13a35049))
     - Add auto-generated changelog ([`7314209`](https://github.com/symplasma/iconography/commit/7314209b3f3577eb86819bd0d104990345ca9eac))
     - Update cargo metadata ([`cbbce69`](https://github.com/symplasma/iconography/commit/cbbce6944fe6c2a384de71a57401fcd0ba4f9e4c))
     - Update README.md ([`f1e254f`](https://github.com/symplasma/iconography/commit/f1e254f68da9402bc898a1769a087dd2ede18476))
