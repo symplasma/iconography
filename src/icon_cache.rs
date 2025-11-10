@@ -13,7 +13,7 @@ use walkdir::WalkDir;
 /// Maximum depth to recurse below "icons" or "pixmaps" paths
 const MAX_ICON_SEARCH_DEPTH: usize = 4;
 
-pub(crate) struct IconInfo {
+pub struct IconInfo {
     pub(crate) path: PathBuf,
     pub(crate) name: String,
 }
@@ -202,11 +202,7 @@ pub(crate) fn discover_icons() -> Vec<IconInfo> {
     icons
 }
 
-pub(crate) fn load_icon_textures(
-    icon_infos: Vec<IconInfo>,
-    ctx: &egui::Context,
-    sender: Sender<Icon>,
-) {
+pub fn load_icon_textures(icon_infos: Vec<IconInfo>, ctx: &egui::Context, sender: Sender<Icon>) {
     info!("Loading icon textures for {} icons", icon_infos.len());
     let mut loaded_count = 0;
     let mut error_count = 0;
