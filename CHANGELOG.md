@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.1.2 (2025-11-10)
+## v0.1.3 (2025-11-10)
 
 ### New Features
 
- - <csr-id-1e6d63f96c7de4d851c301b20938bb3b6dbc86f9/> Make load_icon_textures and IconInfo public
+ - <csr-id-d96fe4dfb5dab7a21ac40ec68fc051f2712a3c99/> Make more methods public
+   We want to test out some new techniques in free-launch.
 
 ### Commit Statistics
 
@@ -26,6 +27,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Make more methods public ([`d96fe4d`](https://github.com/symplasma/iconography/commit/d96fe4dfb5dab7a21ac40ec68fc051f2712a3c99))
+</details>
+
+## v0.1.2 (2025-11-10)
+
+### New Features
+
+ - <csr-id-1e6d63f96c7de4d851c301b20938bb3b6dbc86f9/> Make load_icon_textures and IconInfo public
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release iconography v0.1.2 ([`5320361`](https://github.com/symplasma/iconography/commit/532036130f8ac11124c5bf76c3abe6a16173e89f))
     - Make load_icon_textures and IconInfo public ([`1e6d63f`](https://github.com/symplasma/iconography/commit/1e6d63f96c7de4d851c301b20938bb3b6dbc86f9))
 </details>
 
