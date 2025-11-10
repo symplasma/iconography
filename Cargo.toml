@@ -9,7 +9,7 @@ repository = "https://github.com/symplasma/iconography"
 readme = "README.md"
 keywords = ["linux", "desktop", "icons"]                                                 # free text, 5 keywords max
 categories = ["command-line-utilities"]                                                  # https://crates.io/category_slugs
-exclude = [".vscode/*", ".gitignore", ".aider.*"]
+exclude = [".vscode/*", ".gitignore", ".aider.*", "design/*"]
 # https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
