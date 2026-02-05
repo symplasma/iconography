@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.1.5 (2026-02-05)
+## v0.1.6 (2026-02-05)
 
 ### New Features
 
- - <csr-id-ac3ea1ff56c8644544bb6055c7910890a3bdd1dd/> Add image-extras to handle extra formats
+ - <csr-id-31bebc892595d340b1a32160329f66ed8a7bc648/> Enable support for XPM images
 
 ### Commit Statistics
 
@@ -26,6 +26,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Enable support for XPM images ([`31bebc8`](https://github.com/symplasma/iconography/commit/31bebc892595d340b1a32160329f66ed8a7bc648))
+</details>
+
+## v0.1.5 (2026-02-05)
+
+### New Features
+
+ - <csr-id-ac3ea1ff56c8644544bb6055c7910890a3bdd1dd/> Add image-extras to handle extra formats
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release iconography v0.1.5 ([`0b229b4`](https://github.com/symplasma/iconography/commit/0b229b4d0f25cc00585c64a1ceb72f32c8ada611))
     - Add image-extras to handle extra formats ([`ac3ea1f`](https://github.com/symplasma/iconography/commit/ac3ea1ff56c8644544bb6055c7910890a3bdd1dd))
 </details>
 
