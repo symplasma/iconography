@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.1.4 (2026-02-05)
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 86 days passed between releases.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Upgrade incompatible dependencies ([`fdd12c2`](https://github.com/symplasma/iconography/commit/fdd12c2f15701d0f7ef6413484740cb4aae4446e))
+</details>
+
 ## v0.1.3 (2025-11-10)
 
 ### New Features
@@ -16,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -27,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release iconography v0.1.3 ([`ab5a5b6`](https://github.com/symplasma/iconography/commit/ab5a5b613fafbc78d02d3e5c4bbb0f56cbf9766e))
     - Make more methods public ([`d96fe4d`](https://github.com/symplasma/iconography/commit/d96fe4dfb5dab7a21ac40ec68fc051f2712a3c99))
 </details>
 
