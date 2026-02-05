@@ -40,6 +40,9 @@ fn main() -> Result<(), eframe::Error> {
         eprintln!("Failed to setup tracing: {}", e);
     }
 
+    // Adding image-extras to handle extra image formats https://github.com/image-rs/image-extras
+    image_extras::register();
+
     tracing::info!("Starting Icon Viewer application");
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
