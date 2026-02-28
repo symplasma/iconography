@@ -95,6 +95,32 @@ impl Iconography {
                 });
         })
     }
+
+    fn increase_icon_size(&mut self) {
+        let current_index = self
+            .icon_size_options
+            .iter()
+            .position(|(_, size)| *size == self.icon_size)
+            .unwrap_or(1); // Default to Medium (index 1)
+
+        if current_index < self.icon_size_options.len() - 1 {
+            self.icon_size = self.icon_size_options[current_index + 1].1;
+            info!("Increased icon size to {}", self.icon_size);
+        }
+    }
+
+    fn decrease_icon_size(&mut self) {
+        let current_index = self
+            .icon_size_options
+            .iter()
+            .position(|(_, size)| *size == self.icon_size)
+            .unwrap_or(1); // Default to Medium (index 1)
+
+        if current_index > 0 {
+            self.icon_size = self.icon_size_options[current_index - 1].1;
+            info!("Decreased icon size to {}", self.icon_size);
+        }
+    }
 }
 
 fn render_icon(icon_size: f32, spacing: f32, ui: &mut egui::Ui, icon: &Icon) {
@@ -132,8 +158,15 @@ fn render_icon(icon_size: f32, spacing: f32, ui: &mut egui::Ui, icon: &Icon) {
     });
 }
 
-fn handle_key_events(ctx: &egui::Context) -> bool {
-    let mut should_quit = false;
+#[derive(Default)]
+struct KeyEventResult {
+    should_quit: bool,
+    increase_size: bool,
+    decrease_size: bool,
+}
+
+fn handle_key_events(ctx: &egui::Context) -> KeyEventResult {
+    let mut result = KeyEventResult::default();
 
     // Handle keyboard shortcuts
     ctx.input(|i| {
@@ -145,11 +178,25 @@ fn handle_key_events(ctx: &egui::Context) -> bool {
             info!("User requested application close via keyboard shortcut");
 
             // we're returning a bool here since calling `ctx.send_viewport_cmd(egui::ViewportCommand::Close)` causes a hang
-            should_quit = true;
+            result.should_quit = true;
+        }
+
+        // Ctrl + (using = key, which is + without shift on most keyboards, or PlusEquals)
+        if i.modifiers.ctrl
+            && (i.key_pressed(egui::Key::Plus) || i.key_pressed(egui::Key::Equals))
+        {
+            info!("User requested icon size increase via Ctrl+");
+            result.increase_size = true;
+        }
+
+        // Ctrl -
+        if i.modifiers.ctrl && i.key_pressed(egui::Key::Minus) {
+            info!("User requested icon size decrease via Ctrl-");
+            result.decrease_size = true;
         }
     });
 
-    should_quit
+    result
 }
 
 impl eframe::App for Iconography {
@@ -161,7 +208,15 @@ impl eframe::App for Iconography {
             ctx.set_visuals(egui::Visuals::light());
         }
 
-        let should_quit = handle_key_events(ctx);
+        let key_result = handle_key_events(ctx);
+
+        // Handle icon size changes
+        if key_result.increase_size {
+            self.increase_icon_size();
+        }
+        if key_result.decrease_size {
+            self.decrease_icon_size();
+        }
 
         // set scaling for high-dpi display so the ui doesn't render too small
         ctx.set_pixels_per_point(2.0);
@@ -174,7 +229,7 @@ impl eframe::App for Iconography {
 
         self.render_main_panel(ctx);
 
-        if should_quit {
+        if key_result.should_quit {
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
         }
 
