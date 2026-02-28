@@ -173,7 +173,7 @@ fn render_icon(icon_size: f32, spacing: f32, ui: &mut egui::Ui, icon: &Icon) {
     });
 }
 
-#[derive(Default, PartialEq)]
+#[derive(Default, PartialEq, Clone, Copy)]
 enum KeyEvent {
     #[default]
     None,
