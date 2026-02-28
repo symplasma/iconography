@@ -121,6 +121,21 @@ impl Iconography {
             info!("Decreased icon size to {}", self.icon_size);
         }
     }
+
+    fn handle_key_event(&mut self, key_event: KeyEvent) {
+        match key_event {
+            KeyEvent::None => {}
+            KeyEvent::Quit => {
+                // Handled separately in update() since we need ctx
+            }
+            KeyEvent::IncreaseSize => {
+                self.increase_icon_size();
+            }
+            KeyEvent::DecreaseSize => {
+                self.decrease_icon_size();
+            }
+        }
+    }
 }
 
 fn render_icon(icon_size: f32, spacing: f32, ui: &mut egui::Ui, icon: &Icon) {
@@ -158,15 +173,17 @@ fn render_icon(icon_size: f32, spacing: f32, ui: &mut egui::Ui, icon: &Icon) {
     });
 }
 
-#[derive(Default)]
-struct KeyEventResult {
-    should_quit: bool,
-    increase_size: bool,
-    decrease_size: bool,
+#[derive(Default, PartialEq)]
+enum KeyEvent {
+    #[default]
+    None,
+    Quit,
+    IncreaseSize,
+    DecreaseSize,
 }
 
-fn handle_key_events(ctx: &egui::Context) -> KeyEventResult {
-    let mut result = KeyEventResult::default();
+fn handle_key_events(ctx: &egui::Context) -> KeyEvent {
+    let mut result = KeyEvent::None;
 
     // Handle keyboard shortcuts
     ctx.input(|i| {
@@ -176,23 +193,17 @@ fn handle_key_events(ctx: &egui::Context) -> KeyEventResult {
             || (i.modifiers.ctrl && i.key_pressed(egui::Key::Q))
         {
             info!("User requested application close via keyboard shortcut");
-
-            // we're returning a bool here since calling `ctx.send_viewport_cmd(egui::ViewportCommand::Close)` causes a hang
-            result.should_quit = true;
-        }
-
-        // Ctrl + (using = key, which is + without shift on most keyboards, or PlusEquals)
-        if i.modifiers.ctrl
+            result = KeyEvent::Quit;
+        } else if i.modifiers.ctrl
             && (i.key_pressed(egui::Key::Plus) || i.key_pressed(egui::Key::Equals))
         {
+            // Ctrl + (using = key, which is + without shift on most keyboards, or PlusEquals)
             info!("User requested icon size increase via Ctrl+");
-            result.increase_size = true;
-        }
-
-        // Ctrl -
-        if i.modifiers.ctrl && i.key_pressed(egui::Key::Minus) {
+            result = KeyEvent::IncreaseSize;
+        } else if i.modifiers.ctrl && i.key_pressed(egui::Key::Minus) {
+            // Ctrl -
             info!("User requested icon size decrease via Ctrl-");
-            result.decrease_size = true;
+            result = KeyEvent::DecreaseSize;
         }
     });
 
@@ -208,15 +219,8 @@ impl eframe::App for Iconography {
             ctx.set_visuals(egui::Visuals::light());
         }
 
-        let key_result = handle_key_events(ctx);
-
-        // Handle icon size changes
-        if key_result.increase_size {
-            self.increase_icon_size();
-        }
-        if key_result.decrease_size {
-            self.decrease_icon_size();
-        }
+        let key_event = handle_key_events(ctx);
+        self.handle_key_event(key_event);
 
         // set scaling for high-dpi display so the ui doesn't render too small
         ctx.set_pixels_per_point(2.0);
@@ -229,7 +233,7 @@ impl eframe::App for Iconography {
 
         self.render_main_panel(ctx);
 
-        if key_result.should_quit {
+        if key_event == KeyEvent::Quit {
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
         }
 
