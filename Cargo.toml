@@ -17,8 +17,8 @@ name = "iconography"
 path = "src/main.rs"
 
 [dependencies]
-eframe = "0.33"
-egui = "0.33"
+eframe = "0.34"
+egui = "0.34"
 image = { version = "0.25", features = [
     "png",
     "jpeg",
@@ -28,8 +28,8 @@ image = { version = "0.25", features = [
     "tiff",
     "webp",
 ] }
-resvg = "0.46"
-usvg = "0.46"
+resvg = "0.47"
+usvg = "0.47"
 walkdir = "2.5"
 anyhow = "1.0"
 tracing = "0.1"
