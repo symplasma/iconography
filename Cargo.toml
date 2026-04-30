@@ -37,3 +37,6 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tracing-appender = "0.2"
 dirs = "6.0"
 image-extras = "0.1.0"
+
+# address a security issue via a "patched" transitive dependency
+time = { version = "0.3.47", optional = true }
