@@ -1,6 +1,6 @@
 use crate::icon_cache::{Icon, IconCache};
 use eframe::egui;
-use egui::Vec2;
+use egui::{Panel, Vec2};
 use tracing::info;
 
 pub struct Iconography {
@@ -39,7 +39,7 @@ impl Iconography {
     }
 
     fn render_top_bar(&mut self, ui: &mut egui::Ui) {
-        egui::TopBottomPanel::top("toolbar").show_inside(ui, |ui| {
+        Panel::top("toolbar").show_inside(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label(format!(
                     "{}/{} icons loaded",
