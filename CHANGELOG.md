@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.1.7 (2026-04-30)
+
+### Chore
+
+ - <csr-id-1bf386aac2435fea6f632dc745179c3bd4bd995e/> Upgrade incompatible dependencies
+
+### New Features
+
+ - <csr-id-587410528ac33ba14ae2c858aab1d82f1b5a3ade/> add Ctrl+/Ctrl- keyboard shortcuts to change icon size
+
+### Bug Fixes
+
+ - <csr-id-02bd2a003b8748d7b4bdb98f8f80ce51f4dc8116/> Update time for security issue
+ - <csr-id-36df30ff6baea6691ec57d31a80a410ef686267b/> Fix egui related deprecation
+ - <csr-id-91d7e714749d0a6876599a541ed3b1b34b46d9ca/> update eframe::App trait implementation for new egui API
+
+### Refactor
+
+ - <csr-id-4942747c156431ada59203635e24efe36fd54b90/> replace KeyEventResult struct with KeyEvent enum
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 7 commits contributed to the release over the course of 60 calendar days.
+ - 84 days passed between releases.
+ - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Update time for security issue ([`02bd2a0`](https://github.com/symplasma/iconography/commit/02bd2a003b8748d7b4bdb98f8f80ce51f4dc8116))
+    - Fix egui related deprecation ([`36df30f`](https://github.com/symplasma/iconography/commit/36df30ff6baea6691ec57d31a80a410ef686267b))
+    - Update eframe::App trait implementation for new egui API ([`91d7e71`](https://github.com/symplasma/iconography/commit/91d7e714749d0a6876599a541ed3b1b34b46d9ca))
+    - Upgrade incompatible dependencies ([`1bf386a`](https://github.com/symplasma/iconography/commit/1bf386aac2435fea6f632dc745179c3bd4bd995e))
+    - Add missing derives ([`3c0e9e3`](https://github.com/symplasma/iconography/commit/3c0e9e3b9f6cdfd8831c45202494cae67d3200e8))
+    - Replace KeyEventResult struct with KeyEvent enum ([`4942747`](https://github.com/symplasma/iconography/commit/4942747c156431ada59203635e24efe36fd54b90))
+    - Add Ctrl+/Ctrl- keyboard shortcuts to change icon size ([`5874105`](https://github.com/symplasma/iconography/commit/587410528ac33ba14ae2c858aab1d82f1b5a3ade))
+</details>
+
 ## v0.1.6 (2026-02-05)
 
 ### New Features
@@ -15,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -26,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release iconography v0.1.6 ([`6976f23`](https://github.com/symplasma/iconography/commit/6976f238ca5f0b622ab4016f8b16d631aece3e1c))
     - Enable support for XPM images ([`31bebc8`](https://github.com/symplasma/iconography/commit/31bebc892595d340b1a32160329f66ed8a7bc648))
 </details>
 
