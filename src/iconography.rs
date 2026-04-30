@@ -38,8 +38,8 @@ impl Iconography {
         app
     }
 
-    fn render_top_bar(&mut self, ctx: &egui::Context) {
-        egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
+    fn render_top_bar(&mut self, ui: &mut egui::Ui) {
+        egui::TopBottomPanel::top("toolbar").show_inside(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label(format!(
                     "{}/{} icons loaded",
@@ -68,8 +68,8 @@ impl Iconography {
         });
     }
 
-    fn render_main_panel(&mut self, ctx: &egui::Context) -> egui::InnerResponse<()> {
-        egui::CentralPanel::default().show(ctx, |ui| {
+    fn render_main_panel(&mut self, ui: &mut egui::Ui) {
+        egui::CentralPanel::default().show_inside(ui, |ui| {
             ui.heading("Program Icons");
             ui.separator();
 
@@ -93,7 +93,7 @@ impl Iconography {
                         }
                     });
                 });
-        })
+        });
     }
 
     fn increase_icon_size(&mut self) {
@@ -211,7 +211,9 @@ fn handle_key_events(ctx: &egui::Context) -> KeyEvent {
 }
 
 impl eframe::App for Iconography {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+    fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        let ctx = ui.ctx().clone();
+
         // Set theme based on dark_mode toggle
         if self.dark_mode {
             ctx.set_visuals(egui::Visuals::dark());
@@ -219,7 +221,7 @@ impl eframe::App for Iconography {
             ctx.set_visuals(egui::Visuals::light());
         }
 
-        let key_event = handle_key_events(ctx);
+        let key_event = handle_key_events(&ctx);
         self.handle_key_event(key_event);
 
         // set scaling for high-dpi display so the ui doesn't render too small
@@ -229,9 +231,9 @@ impl eframe::App for Iconography {
         let current_icon_count = self.icons.len();
 
         // Toolbar
-        self.render_top_bar(ctx);
+        self.render_top_bar(ui);
 
-        self.render_main_panel(ctx);
+        self.render_main_panel(ui);
 
         if key_event == KeyEvent::Quit {
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
