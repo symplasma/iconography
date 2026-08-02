@@ -17,8 +17,8 @@ name = "iconography"
 path = "src/main.rs"
 
 [dependencies]
-eframe = "0.34"
-egui = "0.34"
+eframe = "0.35"
+egui = "0.35"
 image = { version = "0.25", features = [
     "png",
     "jpeg",
@@ -36,7 +36,7 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tracing-appender = "0.2"
 dirs = "6.0"
-image-extras = "0.1.0"
+image-extras = "0.1.1"
 
 # address a security issue via a "patched" transitive dependency
-time = { version = "0.3.47", optional = true }
+time = { version = "0.3.55", optional = true }
